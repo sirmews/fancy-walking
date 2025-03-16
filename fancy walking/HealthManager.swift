@@ -3,6 +3,7 @@ import HealthKit
 
 class HealthManager: ObservableObject {
     private let healthStore = HKHealthStore()
+    private var updateWorkItem: DispatchWorkItem?
     
     @Published var todaySteps: Int = 0
     @Published var todayDistance: Double = 0.0 // in kilometers
@@ -60,6 +61,16 @@ class HealthManager: ObservableObject {
             }
         }
     }
+
+    // This function debounces the updates to the steps and distance data
+    // It prevents the data from being updated too frequently
+    // default delay is 5 seconds
+    private func debounce(delay: TimeInterval = 5, action: @escaping () -> Void) {
+        updateWorkItem?.cancel()
+        let workItem = DispatchWorkItem(block: action)
+        updateWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: workItem)
+    }
     
     private func fetchTodaySumOfSample(for quantityType: HKQuantityType, unit: HKUnit, completion: @escaping (Double) -> Void) {
         let predicate = createTodayPredicate()
@@ -104,8 +115,11 @@ class HealthManager: ObservableObject {
                 print("Observer query error: \(error.localizedDescription)")
                 return
             }
-            
-            self?.fetchTodaySteps()
+
+            // Debounce the update to the steps data
+            self?.debounce {
+                self?.fetchTodaySteps()
+            }
             completion()
         }
         
