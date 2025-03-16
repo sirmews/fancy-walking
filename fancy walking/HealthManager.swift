@@ -29,12 +29,11 @@ class HealthManager: ObservableObject {
         // Request authorization to read health data
         healthStore.requestAuthorization(toShare: nil, read: readTypes) { [weak self] success, error in
             DispatchQueue.main.async {
+                
                 if success {
                     self?.isAuthorized = true
                     self?.fetchTodaySteps()
                     self?.fetchTodayDistance()
-                    
-                    // Setup observers for real-time updates
                     self?.setupObservers()
                 } else if let error = error {
                     print("Authorization failed with error: \(error.localizedDescription)")
