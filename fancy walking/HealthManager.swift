@@ -105,6 +105,15 @@ class HealthManager: ObservableObject {
         // .strictStartDate ensures samples start exactly within this time range
         return HKQuery.predicateForSamples(withStart: startOfDay, end: now, options: .strictStartDate)
     }
+
+    private func checkBackgroundDelivery(for quantityType: HKQuantityType, frequency: HKUpdateFrequency) {
+        // Check if background delivery is enabled for steps and distance
+        healthStore.enableBackgroundDelivery(for: quantityType, frequency: frequency, withCompletion: { success, error in
+            if let error = error {
+                print("Error enabling background delivery: \(error.localizedDescription)")
+            }
+        })
+    }
     
     // Set up real-time observers for steps and distance
     private func setupObservers() {
@@ -139,18 +148,7 @@ class HealthManager: ObservableObject {
         
         healthStore.execute(distanceQuery)
         
-        // Enable background delivery for updates
-        // @todo: learn more about this
-        healthStore.enableBackgroundDelivery(for: stepsType, frequency: .immediate, withCompletion: { success, error in
-            if let error = error {
-                print("Error enabling background delivery: \(error.localizedDescription)")
-            }
-        })
-        
-        healthStore.enableBackgroundDelivery(for: distanceType, frequency: .immediate, withCompletion: { success, error in
-            if let error = error {
-                print("Error enabling background delivery: \(error.localizedDescription)")
-            }
-        })
+        checkBackgroundDelivery(for: stepsType, frequency: .immediate)
+        checkBackgroundDelivery(for: distanceType, frequency: .immediate)
     }
 }
