@@ -4,11 +4,9 @@
 <dict>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>remote-notification</string>
 		<string>background-processing</string>
 		<string>healthkit</string>
+		<string>processing</string>
 	</array>
-	<key>NSHealthShareUsageDescription</key>
-	<string>We need access to your health data to track your steps and distance</string>
 </dict>
 </plist>

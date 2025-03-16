@@ -5,3 +5,13 @@ buildServer.json
 
 # vscode settings
 .vscode
+
+# Ignore cruft in the project bundle
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+
+# Ignore build products folder
+build/
+
+# Ignore installed pods
+Pods/*
