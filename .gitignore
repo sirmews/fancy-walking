@@ -1,0 +1,7 @@
+buildServer.json
+
+# cursor settings
+.cursor
+
+# vscode settings
+.vscode
