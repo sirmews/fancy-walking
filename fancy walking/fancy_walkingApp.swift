@@ -13,6 +13,7 @@ struct fancy_walkingApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             StepData.self,
+            FastData.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
